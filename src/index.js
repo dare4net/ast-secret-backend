@@ -36,6 +36,7 @@ app.use((err, req, res, next) => {
 // In-memory storage
 const users = new Map(); // Store user data
 const messages = new Map(); // Store messages for each user
+const host = "ast-secret.vercel.app";
 
 // Helper function to clean expired users and messages (24 hours)
 const cleanExpiredData = () => {
@@ -70,7 +71,7 @@ app.post('/api/users', (req, res) => {
     messageCount: 0,
     createdAt: new Date(now).toISOString(),
     expiresAt: new Date(expiresAt).toISOString(),
-    link: `${req.protocol}://${req.get('host')}/u/${username}`
+    link: `${req.protocol}://${host}/u/${username}`
   };
 
   users.set(userId, userData);
