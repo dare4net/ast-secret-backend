@@ -54,6 +54,10 @@ const cleanExpiredData = () => {
 setInterval(cleanExpiredData, 1000 * 60 * 60);
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the AST Secret API');});
+
+
 app.post('/api/users', (req, res) => {
   const { username, usePin, isPublic } = req.body;
   const userId = nanoid();
