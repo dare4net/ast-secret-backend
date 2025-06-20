@@ -195,6 +195,7 @@ app.get('/api/messages/:userId', (req, res) => {
 app.post('/api/messages/:messageId/reactions', (req, res) => {
   const { messageId } = req.params;
   const { userId, reactionType } = req.body;
+  logger.info(`we are adding a reaction to ${messageId} with ${reactionType}`);
   
   const userMessages = messages.get(userId);
   if (!userMessages) {
@@ -249,9 +250,11 @@ app.post('/api/messages/:messageId/read', (req, res) => {
   res.json(message);
 });
 
+// Reply to a message
 app.post('/api/messages/:messageId/reply', (req, res) => {
   const { messageId } = req.params;
   const { userId, reply } = req.body;
+  logger.info(`we are replying to ${messageId} with ${reply} from ${userId}`);
   
   const userMessages = messages.get(userId);
   if (!userMessages) {
@@ -263,7 +266,13 @@ app.post('/api/messages/:messageId/reply', (req, res) => {
     return res.status(404).json({ error: 'Message not found' });
   }
 
+  // Store the reply with timestamp
   message.reply = reply;
+  message.replyTimestamp = new Date().toISOString();
+
+  // Save the updated messages array
+  messages.set(userId, userMessages);
+
   res.json(message);
 });
 
